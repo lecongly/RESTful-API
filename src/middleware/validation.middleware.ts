@@ -28,7 +28,7 @@ function validationMiddleware(schema: Joi.Schema): RequestHandler {
             });
             res.status(status).send({
                 status,
-                errors: errors,
+                message: errors,
             });
         }
     };

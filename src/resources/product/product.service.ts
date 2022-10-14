@@ -27,7 +27,8 @@ class ProductService {
         content: string,
         category: string,
         sold: number,
-        stock: number
+        stock: number,
+        checked: boolean
     ): Promise<Product> {
         try {
             const product = await this.product.create({
@@ -39,6 +40,7 @@ class ProductService {
                 category,
                 sold,
                 stock,
+                checked,
             });
             return product;
         } catch (error: any) {

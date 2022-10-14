@@ -10,7 +10,7 @@ import Controller from '@/utils/interfaces/controller.interface';
 import { NextFunction, Request, Response, Router } from 'express';
 
 class CategoryController implements Controller {
-    public path = `/category`;
+    public path = `/categories`;
     public router = Router();
     private CategoryService = new CategoryService();
     constructor() {
@@ -46,7 +46,7 @@ class CategoryController implements Controller {
     ): Promise<Response | void> => {
         try {
             const categories = await this.CategoryService.getCategories();
-            res.json({ results: categories });
+            res.json(categories);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -59,7 +59,7 @@ class CategoryController implements Controller {
         try {
             const { name } = req.body;
             const category = await this.CategoryService.createCategory(name);
-            res.status(201).json({ results: category });
+            res.status(201).json(category);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -72,7 +72,7 @@ class CategoryController implements Controller {
         try {
             const { id } = req.params;
             const category = await this.CategoryService.getCategoryByID(id);
-            res.json({ results: category });
+            res.json(category);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -84,8 +84,8 @@ class CategoryController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { id } = req.params;
-            const data = await this.CategoryService.deleteCategoryByID(id);
-            res.json({ results: data });
+            const message = await this.CategoryService.deleteCategoryByID(id);
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -98,11 +98,11 @@ class CategoryController implements Controller {
         try {
             const { id } = req.params;
             const state = req.body;
-            const data = await this.CategoryService.updateCategoryByID(
+            const message = await this.CategoryService.updateCategoryByID(
                 id,
                 state
             );
-            res.json({ results: data });
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

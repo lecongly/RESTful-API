@@ -40,7 +40,7 @@ class ImageController implements Controller {
                 throw new Error('Incorrect image format');
             }
             const data = await this.ImageService.upload(tempFilePath);
-            res.json({ results: data });
+            res.json(data);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -59,7 +59,7 @@ class ImageController implements Controller {
             if (data.result == 'not found') {
                 next(new HttpException(400, 'No found public id selected.'));
             } else {
-                res.json({ results: 'Delete successfully' });
+                res.json({ message: 'Delete successfully' });
             }
         } catch (error: any) {
             next(new HttpException(400, error.message));

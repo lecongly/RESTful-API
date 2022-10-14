@@ -7,7 +7,7 @@ import Controller from '@/utils/interfaces/controller.interface';
 import { NextFunction, Request, Response, Router } from 'express';
 
 class ProductController implements Controller {
-    public path = `/product`;
+    public path = `/products`;
     public router = Router();
     private ProductService = new ProductService();
     constructor() {
@@ -31,7 +31,7 @@ class ProductController implements Controller {
     ): Promise<Response | void> => {
         try {
             const products = await this.ProductService.getProducts();
-            res.json({ results: products });
+            res.json(products);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -51,6 +51,7 @@ class ProductController implements Controller {
                 category,
                 sold,
                 stock,
+                checked,
             }: ProductInterface = req.body;
             const product = await this.ProductService.createProduct(
                 image,
@@ -60,9 +61,10 @@ class ProductController implements Controller {
                 content,
                 category,
                 sold,
-                stock
+                stock,
+                checked
             );
-            res.json({ results: product });
+            res.json({ product });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -75,7 +77,7 @@ class ProductController implements Controller {
         try {
             const { id } = req.params;
             const product = await this.ProductService.getProductByID(id);
-            res.json({ results: product });
+            res.json(product);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -87,8 +89,8 @@ class ProductController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { id } = req.params;
-            const data = await this.ProductService.deleteProductByID(id);
-            res.json({ results: data });
+            const message = await this.ProductService.deleteProductByID(id);
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -101,8 +103,11 @@ class ProductController implements Controller {
         try {
             const { id } = req.params;
             const state = req.body;
-            const data = await this.ProductService.updateProductByID(id, state);
-            res.json({ results: data });
+            const message = await this.ProductService.updateProductByID(
+                id,
+                state
+            );
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

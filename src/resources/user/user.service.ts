@@ -109,6 +109,17 @@ class UserService {
             throw new Error(error.message);
         }
     }
+    public async deleteUserById(id: string): Promise<string> {
+        try {
+            const user = await this.user.findByIdAndRemove(id);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            return 'User removed successfully.';
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
     public async increaseTokenVersion(userId: string): Promise<void | Error> {
         try {
             const user = await this.user.findOneAndUpdate(

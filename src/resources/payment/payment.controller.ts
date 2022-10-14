@@ -33,7 +33,7 @@ class PaymentController implements Controller {
     ): Promise<Response | void> => {
         try {
             const payments = await this.PaymentService.getPayments();
-            res.json({ results: payments });
+            res.json(payments);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -57,7 +57,7 @@ class PaymentController implements Controller {
                 cart,
                 address
             );
-            res.json({ results: payment });
+            res.json(payment);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

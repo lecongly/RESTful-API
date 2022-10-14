@@ -76,6 +76,18 @@ class UserController implements Controller {
             authAdminMiddleware,
             this.getAllUser
         );
+        this.router.get(
+            `${this.path}/:id`,
+            authMiddleware,
+            authAdminMiddleware,
+            this.getById
+        );
+        this.router.delete(
+            `${this.path}`,
+            authMiddleware,
+            authAdminMiddleware,
+            this.deleteById
+        );
     }
 
     private register = async (
@@ -85,8 +97,12 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { name, email, password } = req.body;
-            const data = await this.UserService.register(name, email, password);
-            res.json({ results: data });
+            const message = await this.UserService.register(
+                name,
+                email,
+                password
+            );
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -98,8 +114,10 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { activation_token } = req.body;
-            const data = await this.UserService.activateEmail(activation_token);
-            res.json({ results: data });
+            const message = await this.UserService.activateEmail(
+                activation_token
+            );
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -167,8 +185,8 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { email } = req.body;
-            const data = await this.UserService.forgot(email);
-            res.json({ results: data });
+            const message = await this.UserService.forgot(email);
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -182,7 +200,7 @@ class UserController implements Controller {
             const user = await this.UserService.getUserById(
                 res.locals.token.userId
             );
-            res.json({ results: user });
+            res.json(user);
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -194,11 +212,11 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { password } = req.body;
-            const data = await this.UserService.resetPassword(
+            const message = await this.UserService.resetPassword(
                 res.locals.token.userId,
                 password
             );
-            res.json({ results: data });
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -210,12 +228,12 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { name, avatar } = req.body;
-            const data = await this.UserService.updateUser(
+            const message = await this.UserService.updateUser(
                 res.locals.token.userId,
                 name,
                 avatar
             );
-            res.json({ results: data });
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -228,11 +246,11 @@ class UserController implements Controller {
         try {
             await this.UserService.getUserById(res.locals.token.userId);
             const { cart } = req.body;
-            const data = await this.UserService.addToCartList(
+            const message = await this.UserService.addToCartList(
                 res.locals.token.userId,
                 cart
             );
-            res.json({ results: data });
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -245,11 +263,11 @@ class UserController implements Controller {
         try {
             await this.UserService.getUserById(res.locals.token.userId);
             const { wishList } = req.body;
-            const data = await this.UserService.addToWishList(
+            const message = await this.UserService.addToWishList(
                 res.locals.token.userId,
                 wishList
             );
-            res.json({ results: data });
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -261,7 +279,33 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const users = await this.UserService.getAllUser();
-            res.json({ results: users });
+            res.json(users);
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+    private getById = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { id } = req.params;
+            const user = await this.UserService.getUserById(id);
+            res.json(user);
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+    private deleteById = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { id } = req.params;
+            const message = await this.UserService.deleteUserById(id);
+            res.json({ message });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

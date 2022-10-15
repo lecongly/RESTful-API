@@ -36,7 +36,7 @@ function signRefreshToken(payload: RefreshTokenPayload) {
 }
 
 const defaultCookieOptions: CookieOptions = {
-    httpOnly: true,
+    httpOnly: false,
     secure: config.isProduction,
     sameSite: config.isProduction ? 'strict' : 'lax',
     domain: config.baseDomain,

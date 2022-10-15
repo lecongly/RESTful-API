@@ -8,6 +8,7 @@ import express, { Application } from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import { config } from './utils/config';
 
 class App {
     public express: Application;
@@ -22,7 +23,12 @@ class App {
     }
     private initialiseMiddleware(): void {
         this.express.use(helmet());
-        this.express.use(cors());
+        this.express.use(
+            cors({
+                credentials: true,
+                origin: [config.clientUrl],
+            })
+        );
         this.express.use(morgan('dev'));
         this.express.use(express.json());
         this.express.use(express.urlencoded({ extended: false }));

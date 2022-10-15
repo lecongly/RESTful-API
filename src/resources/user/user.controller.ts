@@ -134,7 +134,7 @@ class UserController implements Controller {
                 password
             );
             setTokens(res, accessToken, refreshToken);
-            res.redirect(`${config.clientUrl}/`);
+            res.json({ message: 'Login success!' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
